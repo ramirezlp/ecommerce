@@ -1,0 +1,76 @@
+{% extends "products/base.html" %}
+{% load static %}
+{% block content %}
+<div class="hero-wrap hero-bread" style="background-image: url('{% static 'products/images/bg_1.png' %}');">
+    <div class="container">
+      <div class="row no-gutters slider-text align-items-center justify-content-center">
+        <div class="col-md-9 ftco-animate text-center">
+            <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Inicio</a></span> <span>Perfil</span></p>
+          <h1 class="mb-0 bread">Mis Órdenes</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="ftco-section contact-section bg-light pt-5">
+    <div class="container">
+        {% include "products/messages.html" %}
+        <h3 class="mb-2">Mis órdenes</h3>
+            {% if orders %}
+                <div class="row d-flex mb-5 contact-info">
+                    <div class="w-100"></div>
+                {% for order in orders %}
+                <div class="col-md-12 d-flex mb-3">
+                        <div class="info bg-white p-4">
+                        <p class="mb-1"><span style="color: black" ><b>ID de orden:</b> {{ order.order_id}} - Pago realizado</p>
+                        <p class="mb-1"><span style="color: black" ><b>Fecha de pago:</b> {{ order.payment.issued_data}}</p>
+                        <p class="mb-1"><span style="color: black" ><b>Datos de la entrega:</b> {{ order.shipping_address.last_name}}, {{ order.shipping_address.first_name}} - 
+                            {{ order.shipping_address.street }}, Numero {{ order.shipping_address.street_number}}, CP {{ order.shipping_address.zip_code }}, 
+                        {{ order.shipping_address.city}}</p>
+                        <p class="mb-1"><span style="color: black" ><b>Código de seguimiento:</b> *En breve aparecerá el código para que puedas consultar el estado del envío*</p>
+                        <p class="mb-1"><span style="color: black" ><b>Productos</b></p>
+                        <ul>
+                            {% for item in order.items.all %}
+                                <li><span style="color: black">x{{ item.quantity }} - {{item.item.product.name}} - Talle: {{item.item.size.size}}</span></li>
+                            {% endfor %}    
+                        </ul>
+                        </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="row d-flex justify-content-center mt-5">
+                <div class="col text-center">
+                <div class="block-27">
+                    <ul>
+                    {% if page_obj.has_previous  %}
+                        <li>
+                            <a href="?page={{ page_obj.previous_page_number }}"><</a>
+                        </li>
+                    {% endif %}
+                    {% for page_num in page_obj.paginator.page_range %}
+                        
+                        <li {% if page_obj.number == page_num %} class="active" {% endif %}><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+                    {% endfor %}
+                    {% if page_obj.has_next   %}
+                        <li >
+                            <a href="?page={{ page_obj.next_page_number }}">></a>
+                        </li>
+                    {% endif %}
+                    </ul>
+                </div>
+                </div>
+            </div>
+        {% else %}
+        <div class="row d-flex mb-5 contact-info">
+            <div class="w-100"></div>
+            <div class="col-md-12 d-flex">
+                <div class="info bg-white p-4">
+                <p class="text-center mb-0"><b>No existe ninguna orden</b></p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    </div>
+  </section>
+{% endblock %}

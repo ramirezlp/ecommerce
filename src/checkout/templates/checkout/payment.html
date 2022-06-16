@@ -1,0 +1,98 @@
+{% extends "products/base.html" %}
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="{% static 'checkout/stripe_payment.css' %}">
+<script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
+
+{% block content %}
+<div class="hero-wrap hero-bread" style="background-image: url('{% static 'products/images/bg_1.png' %}');">
+    <div class="container">
+      <div class="row no-gutters slider-text align-items-center justify-content-center">
+        <div class="col-md-9 ftco-animate text-center">
+            <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home</a></span> <span>Checkout</span></p>
+          <h1 class="mb-0 bread">Pago</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="container my-4">
+        <h3>Datos de la orden</h3>
+        <div class="container row align-items-end mb-5">
+            <div class="col-md-8 row">
+              <div class="col-md-6 form-group">
+                  <label for="nombre">Nombre</label>
+                  <input name="nombre" class="form-control" readonly value="{{ order.shipping_address.first_name }}">
+              </div>
+              <div class="col-md-6 form-group">
+                  <label for="apellido">Apellido</label>
+                  <input name="apellido" class="form-control" readonly value="{{ order.shipping_address.last_name }}">
+              </div>
+              <div class="col-md-8 form-group">
+                  <label for="calle">Calle</label>
+                  <input name="calle" class="form-control" readonly value="{{ order.shipping_address.street }}">
+              </div>
+              <div class="col-md-4 form-group">
+                  <label for="numero">Número</label>
+                  <input name="numero" class="form-control" readonly value="{{ order.shipping_address.street_number }}">
+              </div>
+              <div class="col-md-8 form-group">
+                  <label for="ciudad">Ciudad</label>
+                  <input name="ciudad" class="form-control" readonly value="{{ order.shipping_address.city }}">
+              </div>
+              <div class="col-md-4 form-group">
+                  <label for="codigo">Código postal</label>
+                  <input name="codigo" class="form-control disabled" readonly value="{{ order.shipping_address.zip_code }}">
+              </div>
+          </div>
+            <div class="col-md-4 order-1">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title mb-4">Tu carrito</h5>
+                      <ul class="list-group">
+                        {% for item in order.items.all %}
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    <h6 class="font-weight-bold">{{ item.item.product.name }} - Talle {{ item.item.size.size }}</h6>
+                                    <small>Cantidad: {{ item.quantity }}</small>
+                                </div>
+                                <span>$ {{ item.get_total|floatformat:2 }}</span>
+                            </li>
+                        {% endfor %}
+                            {% if order.promo_code_applied %}
+                                <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-success">Descuento</span>
+                                <span class="font-weight-bold text-success">- $ {{ order.promo_code_discount|floatformat:2 }}</span>
+                            </li>
+                            {% endif %}
+                            <li class="list-group-item d-flex justify-content-between">
+                                <h6>TOTAL:</h6>
+                                <span class="font-weight-bold text-success">$ {{ order.get_total_amount|floatformat:2 }}</span>
+                            </li>
+                      </ul>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <h3 class="mb-3">Realizar pago</h3>
+        <form action="{% url 'checkout:payment' %}" method="post" id="payment-form" class="p-5 bg-light">
+            {% csrf_token %}
+            <div class="w-100 my-3">
+                <label for="card-element">Tarjeta de crédito o débito</label>
+                <div id="card-element">
+                <!-- A Stripe Element will be inserted here. -->
+                </div>
+
+                <!-- Used to display form errors. -->
+                <div id="card-errors" role="alert"></div>
+            </div>
+            <button class="btn btn-primary btn-block">Pagar {{ order.get_total_amount|floatformat:2 }} $</button>
+        </form>
+
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script type="text/javascript" src="{% static 'checkout/stripe_payment.js' %}"></script>
+{% endblock %}

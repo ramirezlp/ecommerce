@@ -1,0 +1,37 @@
+{% extends "products/base.html" %}
+{% load static %}
+{% block content %}
+    <div class="hero-wrap hero-bread" style="background-image: url('{% static 'products/images/bg_1.png' %}');">
+        <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home</a></span> <span>Checkout</span></p>
+            <h1 class="mb-0 bread">Checkout</h1>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="container my-10">
+        <div class="text-center my-4 mt-10 mb-10">
+            <div class="icon d-flex justify-content-center text-success align-items-center">
+                <span class="ion-ios-checkmark-circle-outline" style="font-size: 90px;"></span>
+          </div>
+            <h3 class="text-dark">El pago se aprobó correctamente</h3>
+            <h4>¡Muchas gracias!</h4>
+
+            <p>Podés chequear el estado de todas las órdenes solicitadas en la seccion de "Mis órdenes" de nuestra web.</p>
+            <div class="m-auto w-50  py-4">
+                <a class="btn btn-primary btn-block" href="{% url 'show-orders' %}">Ir a mis órdenes</a>
+                
+            </div>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+{% endblock %}

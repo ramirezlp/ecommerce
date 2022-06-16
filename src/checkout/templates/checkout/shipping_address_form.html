@@ -1,0 +1,30 @@
+{% load crispy_forms_tags %}
+<div class="row align-items-end">
+  <div class="col-md-6">
+    <div class="form-group">{{ form.first_name|as_crispy_field }}</div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">{{ form.last_name|as_crispy_field }}</div>
+  </div>
+  <div class="w-100"></div>
+  <div class="col-md-8">
+    <div class="form-group">{{ form.street|as_crispy_field }}</div>
+  </div>
+  <div class="col-md-4">{{ form.street_number|as_crispy_field }}</div>
+
+<div class="w-100"></div>
+<div class="col-md-6">
+  <div class="form-group">{{ form.city|as_crispy_field }}</div>
+</div>
+<div class="col-md-6">
+  <div class="form-group">{{ form.zip_code|as_crispy_field }}</div>
+</div>
+<div class="w-100"></div>
+<div class="col-md-6">
+  <div class="form-group">{{ form.phone|as_crispy_field }}</div>
+</div>
+<div class="col-md-6">
+  <div class="form-group">{{ form.save_address|as_crispy_field }}</div>
+</div>
+<div class="w-100"></div>
+</div>

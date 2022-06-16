@@ -1,0 +1,140 @@
+{% extends "products/base.html" %}
+{% load static %}
+{% block content %}
+<div class="hero-wrap hero-bread" style="background-image: url({{product.category.image.url}});">
+    <div class="container">
+      <div class="row no-gutters slider-text align-items-center justify-content-center">
+        <div class="col-md-9 ftco-animate text-center">
+            <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'products:home-page' %}">Home</a></span> <span>{{product.category.name}}</span></p>
+          <h1 class="mb-0 bread">{{product.category.name}}</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="ftco-section">
+    <div class="container">
+        {% include "products/messages.html" %}
+        <form method="post">
+            {% csrf_token %}
+        <div class="row">
+            <div class="col-lg-6 mb-5 ftco-animate">
+                <a href="{{product.thumbnail.url}}" class="image-popup prod-img-bg"><img alt="{{ product.name }}" src="{{ product.thumbnail.url }}" class="img-fluid"></a>
+            </div>
+            <div class="col-lg-6 product-details pl-md-5 ftco-animate">
+                <h3>{{ product.name }}</h3>
+                <p class="price"><span>${{ product.price }}</span></p>
+                <p>{{ product.description }}</p>
+                    </p>
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="form-group d-flex">
+                  <div class="select-wrap">
+                  <div class="icon"><span class="ion-ios-arrow-down"></span></div>
+                  <select name="size" id="" class="form-control">
+                        <option value="">Talle</option>
+                      {% for size in product.sizes.all %}
+                        <option value="{{size.id}}">{{size.size}}</option>
+                      {% endfor %}
+                  </select>
+                </div>
+                </div>
+                        </div>
+                        <div class="w-100"></div>
+                        <div class="input-group col-md-6 d-flex mb-3">
+                 <span class="input-group-btn mr-2">
+                    <button type="button" class="quantity-left-minus btn"  data-type="minus" data-field="">
+                   <i class="ion-ios-remove"></i>
+                    </button>
+                    </span>
+                 <input type="text" id="quantity" name="quantity" class="quantity form-control input-number" value="1" min="1" max="10">
+                 <span class="input-group-btn ml-2">
+                    <button type="button" class="quantity-right-plus btn" data-type="plus" data-field="">
+                     <i class="ion-ios-add"></i>
+                 </button>
+                 </span>
+              </div>
+              <div class="w-100"></div>
+          </div>
+          <p><input type="submit" formaction="{% url 'carts:add-to-cart' buy_now=0 %}" value="Agregar al carrito" class="btn btn-black py-3 px-5 mr-2">
+            <input type="submit" formaction="{% url 'carts:add-to-cart' buy_now=1 %}" value="Comprar ahora" class="btn btn-primary py-3 px-5 mr-2">
+          </p>
+            </div>
+        </div>
+      </form>
+
+
+
+
+        <div class="row mt-5">
+      <div class="col-md-12 nav-link-wrap">
+        <div class="nav nav-pills d-flex text-center" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+          <a class="nav-link ftco-animate active mr-lg-1" id="v-pills-1-tab" data-toggle="pill" href="#v-pills-1" role="tab" aria-controls="v-pills-1" aria-selected="true">Description</a>
+
+        </div>
+      </div>
+      <div class="col-md-12 tab-wrap">
+        
+        <div class="tab-content bg-light" id="v-pills-tabContent">
+
+          <div class="tab-pane fade show active" id="v-pills-1" role="tabpanel" aria-labelledby="day-1-tab">
+              <div class="p-4">
+                  <h3 class="mb-4">{{ product.name }}</h3>
+                  <p>{{ product.description }}</p>
+              </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script type="text/javascript" src="{% static 'products/main.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        
+    });
+    // add event listener to 'add to cart' button
+    document.querySelector('#add_to_cart').addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const csrftoken = getCookie('csrftoken');
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', "", true);
+        xhr.setRequestHeader('X-CSRFToken', csrftoken);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        var json_response;
+        xhr.onload = () => {
+            if (xhr.status == 200){
+                json_response = JSON.parse(xhr.responseText);
+                updateTotalCartItems(json_response['total_items']);
+
+                let cls = 'alert-success'
+                let msg = json_response['msg'];
+                showAlert(msg, cls, '#product-container', '#product-details');
+
+            }
+            else if (xhr.status == 401){
+                json_response = JSON.parse(xhr.responseText);
+
+                let cls = 'alert-danger'
+                let msg = json_response['error'];
+                showAlert(msg, cls, '#product-container', '#product-details');
+            }
+        }
+
+        xhr.onerror = () => {
+            console.log('Ajax request failed');
+        }
+
+        xhr.send();
+    });
+</script>
+{% endblock %}

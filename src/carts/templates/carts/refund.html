@@ -1,0 +1,25 @@
+{% extends "products/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+<div class="hero-wrap hero-bread" style="background-image: url('{% static 'products/images/bg_1.png' %}');">
+    <div class="container">
+      <div class="row no-gutters slider-text align-items-center justify-content-center">
+        <div class="col-md-9 ftco-animate text-center">
+            <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Inicio</a></span> <span>Devoluciones</span></p>
+          <h1 class="mb-0 bread">Devoluciones</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="container my-4">
+        <h2 class="text-center my-4">Devoluciones</h2>
+        <p class="text-center">Ante cualquier error o problema surgido en la entrega de su pedido, usted podrá realizar un reclamo a través del siguiente formulario. Nos comunicaremos mediante correo electrónico.</p>
+        {% include "products/messages.html" %}
+        <form method="POST" autocomplete="off">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-block btn-primary my-4">Envíar solicitud</button>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "products/base.html" %}
+{% load static %}
+{% block content %}
+<div class="hero-wrap hero-bread" style="background-image: url('{% static 'products/images/bg_1.png' %}');">
+    <div class="container">
+      <div class="row no-gutters slider-text align-items-center justify-content-center">
+        <div class="col-md-9 ftco-animate text-center">
+            <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home</a></span> <span>Datos</span></p>
+          <h1 class="mb-0 bread">Mis datos personales</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="container my-4">
+        {% include "products/messages.html" %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Datos de usuario</legend>
+            <div class="row">
+                <div class="form-group col">
+                    <label name="username">Nombre de usuario</label>
+                    <input type="text" readonly="readonly" value="{{ user.username }}" class="form-control">
+                </div>
+                <div class="form-group col">
+                    <label name="username">Correo electrónico</label>
+                    <input type="text" readonly="readonly" value="{{ user.email }}" class="form-control">
+                </div>
+            </div>
+            </fieldset>
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Datos de envío</legend>
+                {% include "checkout/shipping_address_form.html" %}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">Actualizar datos de envío</button>
+            </div>
+        </form>
+        <a class="btn btn-primary" href="{% url 'products:home-page' %}">Ir al inicio</a>
+    </div>
+{% endblock %}

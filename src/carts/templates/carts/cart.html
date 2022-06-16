@@ -1,0 +1,102 @@
+{% extends "products/base.html" %}
+{% load static %}
+{% block content %}
+<div class="hero-wrap hero-bread" style="background-image: url('{% static 'products/images/bg_1.png' %}');">
+    <div class="container">
+      <div class="row no-gutters slider-text align-items-center justify-content-center">
+        <div class="col-md-9 ftco-animate text-center">
+            <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Inicio</a></span> <span>Carrito</span></p>
+          <h1 class="mb-0 bread">Mi Carrito</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="ftco-section ftco-cart">
+    <div class="container">
+        {% include "products/messages.html" %}
+        <div class="row">
+        <div class="col-md-12 ftco-animate">
+            
+                {% if order.items.all is empty %}
+                <div class="alert alert-info" role="alert">
+                    El carrito está vacio
+                </div>
+                {% else %}
+                <div class="cart-list">
+                <table class="table">
+                    <thead class="thead-primary">
+                      <tr class="text-center">
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items.all %}
+                            <tr class="text-center">
+                                <td class="product-remove"><a href="{% url 'carts:remove-from-cart' item.item.id %}"><span class="ion-ios-close"></span></a></td>
+                                
+                                <td class="image-prod"><div class="img" style="background-image:url({{item.item.product.thumbnail.url}});"></div></td>
+                                
+                                <td class="product-name">
+                                    <h3>{{ item.item.product.name }}</h3>
+                                    <p>Talle: {{ item.item.size.size }}</p>
+                                </td>
+                                
+                                <td class="price">${{ item.item.product.price|floatformat:2 }}</td>
+                                
+                                <td class="quantity">
+                                    <div class="">
+                                        <a href="{% url 'carts:decrease-product-in-cart' item.item.id %}"><span class="mr-2"><i style="color: black" class="ion-ios-remove"></i></span></a>
+                                        <span>{{ item.quantity }}</span>
+                                        <a href="{% url 'carts:increase-product-in-cart' item.item.id %}"><span class="ml-2"><i style="color: black" class="ion-ios-add"></i></span></a>
+                                    </div>
+                                </td>
+                                
+                                <td class="total">${{ item.get_total|floatformat:2 }}</td>
+                            </tr><!-- END TR-->
+                    {% endfor %}
+
+
+                    </tbody>
+                  </table>
+                </div>
+                {% endif %}
+
+                
+              
+        </div>
+    </div>
+    {% if order.items.all is not empty %}
+    <div class="row justify-content-start">
+        <div class="col col-lg-5 col-md-6 mt-5 cart-wrap ftco-animate">
+            <div class="cart-total mb-3">
+                <h3>Cart Totals</h3>
+                <p class="d-flex">
+                    <span>Total</span>
+                    <span>${{ order.get_total_amount|floatformat:2 }}</span>
+                </p>
+                {% if order.promo_code_applied %}
+                <p class="d-flex">
+                    <span>Descuento</span>
+                    <span>${{ order.promo_code_discount|floatformat:2 }}</span>
+                </p>
+                {% endif %}
+                <hr>
+                <p class="d-flex total-price">
+                    <span>Total</span>
+                    <span>${{ order.get_total_amount|floatformat:2 }}</span>
+                </p>
+            </div>
+            <p class="text-center"><a href="{% url 'checkout:checkout' %}" class="btn btn-primary py-3 px-4">Ir al Checkout</a></p>
+        </div>
+    </div>
+    {% endif %}
+    </div>
+</section>
+
+{% endblock %}
